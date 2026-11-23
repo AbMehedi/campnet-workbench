@@ -7,7 +7,7 @@ from redis import Redis
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from app.core.config import get_settings
+from app.api.deps import get_redis
 from app.db.session import get_db
 
 router = APIRouter(tags=["health"])
@@ -19,7 +19,11 @@ def live() -> dict[str, str]:
 
 
 @router.get("/health/ready")
-def ready(response: Response, db: Annotated[Session, Depends(get_db)]) -> dict[str, object]:
+def ready(
+    response: Response,
+    db: Annotated[Session, Depends(get_db)],
+    redis: Annotated[Redis, Depends(get_redis)],
+) -> dict[str, object]:
     checks: dict[str, str] = {}
 
     try:
@@ -29,7 +33,7 @@ def ready(response: Response, db: Annotated[Session, Depends(get_db)]) -> dict[s
         checks["database"] = "unavailable"
 
     try:
-        Redis.from_url(get_settings().redis_url, socket_connect_timeout=2).ping()
+        redis.ping()
         checks["queue"] = "ok"
     except Exception:
         checks["queue"] = "unavailable"

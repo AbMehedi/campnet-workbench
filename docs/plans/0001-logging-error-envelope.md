@@ -116,6 +116,6 @@ No models, migrations, endpoints or frontend changes.
   `LOG_LEVEL`; test that RQ adds no handlers of its own.
 - Verified: ruff, mypy strict, 35 unit tests; local uvicorn smoke (JSON logs, header, envelope).
 - Docker stack (2026-11-23): `/health/ready` 200 with `X-Request-ID`; 404 returns the envelope
-  with the inbound request ID. Container log output (`docker compose logs backend worker`) was not
-  inspected — worker JSON logging is covered by unit tests only.
+  with the inbound request ID. Container logs checked later the same day (during M1-03): backend and
+  worker both emit JSON lines.
 - Follow-up candidates: refuse to start in production with default `APP_SECRET_KEY`.

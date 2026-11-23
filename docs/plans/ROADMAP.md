@@ -8,13 +8,14 @@ plan file. Split anything that feels bigger than one sitting. Milestones follow 
 - [x] M1-00 Repository scaffold: FastAPI, settings, health checks, worker, Compose, CI
 - [x] M1-01 Verify full Docker stack locally (compose up, migrate, health ready, frontend loads); fix anything found
 - [x] M1-02 Structured JSON logging with request IDs + standard error envelope (design §6.5, §14.1) — [plan](0001-logging-error-envelope.md)
-- [ ] M1-03 Integration test harness: pytest fixtures for a throwaway Postgres DB + Redis; run in CI with service containers
+- [x] M1-03 Integration test harness: pytest fixtures for a throwaway Postgres DB + Redis; run in CI with service containers — [plan](0002-integration-test-harness.md)
 - [ ] M1-04 First migration: `users`, `projects`, `project_memberships` with roles (design §5.1, §5.3)
 - [ ] M1-05 Worker health check: enqueue a no-op job and report worker status (design §14.2); add `job_id` to worker logs
 - [ ] M1-06 Refuse to start in production with the default `APP_SECRET_KEY`
 
 ## M2 — Ingestion and media
 
+- [ ] M2-00 ADR: PostgreSQL collation for Bangla text (ICU vs libc) — before M2-03 sorts or enforces uniqueness on text
 - [ ] M2-01 `data_sources`, `import_batches`, `raw_records` models + migration
 - [ ] M2-02 Apify JSON/JSONL parser with streaming + per-record validation report (synthetic fixtures)
 - [ ] M2-03 Normalizer: raw record → `posts` (UTC timestamps, source metadata JSON); raw stays unchanged
@@ -51,3 +52,4 @@ plan file. Split anything that feels bigger than one sitting. Milestones follow 
 - [ ] M6-01 Choose license (ADR) and add LICENSE
 - [ ] M6-02 Synthetic demo project + seed script
 - [ ] M6-03 Backup/restore script and guide; deployment guide
+- [ ] M6-04 Production image without dev dependencies (`uv sync --no-dev` build target)

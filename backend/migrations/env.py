@@ -1,24 +1,31 @@
-"""Alembic environment. The database URL comes from application settings (DATABASE_URL)."""
+"""Alembic environment.
+
+The database URL comes from ``config.attributes["database_url"]`` when Alembic is invoked
+programmatically (tests), else from application settings (DATABASE_URL). The URL is passed to
+the engine directly rather than via ``set_main_option``: ConfigParser treats ``%`` as
+interpolation and would break URL-encoded passwords.
+"""
 
 from logging.config import fileConfig
 
 from alembic import context
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import create_engine, pool
 
 from app.core.config import get_settings
 from app.models import Base
 
 config = context.config
-if config.config_file_name is not None:
+# Programmatic callers (tests) pass configure_logger=False so Alembic doesn't reset app logging.
+if config.config_file_name is not None and config.attributes.get("configure_logger", True):
     fileConfig(config.config_file_name)
 
-config.set_main_option("sqlalchemy.url", get_settings().database_url)
+database_url: str = config.attributes.get("database_url") or get_settings().database_url
 target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:
     context.configure(
-        url=config.get_main_option("sqlalchemy.url"),
+        url=database_url,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -29,11 +36,7 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online() -> None:
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-    )
+    connectable = create_engine(database_url, poolclass=pool.NullPool)
     with connectable.connect() as connection:
         context.configure(connection=connection, target_metadata=target_metadata, compare_type=True)
         with context.begin_transaction():
