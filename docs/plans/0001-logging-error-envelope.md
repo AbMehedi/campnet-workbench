@@ -1,5 +1,5 @@
 # 0001 — Structured JSON logging, request IDs, standard error envelope
-Roadmap: M1-02 · Status: done (Docker smoke pending) · Date: 2026-11-23
+Roadmap: M1-02 · Status: done · Date: 2026-11-23
 
 ## Goal
 Every API request gets a request ID that appears in its JSON log lines, in the `X-Request-ID`
@@ -115,6 +115,7 @@ No models, migrations, endpoints or frontend changes.
   are readable; invalid-JSON validation errors report `field: null`; uvicorn loggers follow
   `LOG_LEVEL`; test that RQ adds no handlers of its own.
 - Verified: ruff, mypy strict, 35 unit tests; local uvicorn smoke (JSON logs, header, envelope).
-- **Not yet verified:** Docker stack smoke (`curl -i`, `docker compose logs backend worker`) —
-  Docker socket not accessible from the agent session. M1-02 stays unticked until done.
+- Docker stack (2026-11-23): `/health/ready` 200 with `X-Request-ID`; 404 returns the envelope
+  with the inbound request ID. Container log output (`docker compose logs backend worker`) was not
+  inspected — worker JSON logging is covered by unit tests only.
 - Follow-up candidates: refuse to start in production with default `APP_SECRET_KEY`.

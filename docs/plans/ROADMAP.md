@@ -7,10 +7,11 @@ plan file. Split anything that feels bigger than one sitting. Milestones follow 
 
 - [x] M1-00 Repository scaffold: FastAPI, settings, health checks, worker, Compose, CI
 - [x] M1-01 Verify full Docker stack locally (compose up, migrate, health ready, frontend loads); fix anything found
-- [ ] M1-02 Structured JSON logging with request IDs + standard error envelope (design §6.5, §14.1)
+- [x] M1-02 Structured JSON logging with request IDs + standard error envelope (design §6.5, §14.1) — [plan](0001-logging-error-envelope.md)
 - [ ] M1-03 Integration test harness: pytest fixtures for a throwaway Postgres DB + Redis; run in CI with service containers
 - [ ] M1-04 First migration: `users`, `projects`, `project_memberships` with roles (design §5.1, §5.3)
-- [ ] M1-05 Worker health check: enqueue a no-op job and report worker status (design §14.2)
+- [ ] M1-05 Worker health check: enqueue a no-op job and report worker status (design §14.2); add `job_id` to worker logs
+- [ ] M1-06 Refuse to start in production with the default `APP_SECRET_KEY`
 
 ## M2 — Ingestion and media
 
