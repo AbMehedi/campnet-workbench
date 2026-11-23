@@ -11,6 +11,8 @@ exporting multimodal research datasets, with local and cloud deployment options.
 **Open-source the infrastructure. Protect the research data. Make the methodology reproducible.**
 Never commit real research data, media, annotations, or credentials to this repository.
 
+New contributors: start with [docs/ONBOARDING.md](docs/ONBOARDING.md).
+
 ## Stack
 
 | Part      | Tech                                                    |
