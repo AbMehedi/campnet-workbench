@@ -40,3 +40,6 @@ dist/
 *.swp
 .DS_Store
 .~lock.*#
+
+# --- Claude Code personal settings ---
+.claude/settings.local.json
