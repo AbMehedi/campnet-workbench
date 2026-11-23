@@ -6,7 +6,7 @@ plan file. Split anything that feels bigger than one sitting. Milestones follow 
 ## M1 — Backend foundation (finish)
 
 - [x] M1-00 Repository scaffold: FastAPI, settings, health checks, worker, Compose, CI
-- [ ] M1-01 Verify full Docker stack locally (compose up, migrate, health ready, frontend loads); fix anything found
+- [x] M1-01 Verify full Docker stack locally (compose up, migrate, health ready, frontend loads); fix anything found
 - [ ] M1-02 Structured JSON logging with request IDs + standard error envelope (design §6.5, §14.1)
 - [ ] M1-03 Integration test harness: pytest fixtures for a throwaway Postgres DB + Redis; run in CI with service containers
 - [ ] M1-04 First migration: `users`, `projects`, `project_memberships` with roles (design §5.1, §5.3)
