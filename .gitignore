@@ -1,0 +1,42 @@
+# --- Secrets ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- Private design docs (kept locally, never pushed) ---
+docs/private/
+
+# --- Research data: NEVER commit (see docs §11.1) ---
+data/
+var/
+media/
+exports/
+backups/
+*.dump
+*.sql.gz
+*.jsonl
+!backend/tests/fixtures/**/*.jsonl
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- Node ---
+node_modules/
+dist/
+*.tsbuildinfo
+
+# --- Editors / OS ---
+.idea/
+.vscode/
+*.swp
+.DS_Store
+.~lock.*#
