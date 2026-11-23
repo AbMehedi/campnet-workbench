@@ -23,6 +23,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         docs_url=None if settings.app_env == "production" else "/api/docs",
         openapi_url=None if settings.app_env == "production" else "/api/openapi.json",
     )
+    app.state.settings = settings  # read via app.api.deps.get_app_settings
     app.add_middleware(RequestContextMiddleware, include_traceback=include_traceback)
     # CORS is added last = outermost, so even 500s sent by RequestContextMiddleware carry CORS
     # headers and browsers can read the body and X-Request-ID. Preflights skip request IDs.
