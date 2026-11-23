@@ -1,0 +1,15 @@
+# Illustrative Bangla language pack (docs §7.2). Not yet validated; do not treat as final.
+language_tag: bn
+language_name: Bangla
+script_tags:
+  - Bengali
+unicode:
+  normalization_form: NFC
+  preserve_original_text: true
+ocr:
+  adapter: tesseract
+  languages:
+    - ben
+annotation:
+  guideline_version: campnet-bn-v1
+  text_offset_unit: unicode_code_point

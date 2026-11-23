@@ -1,0 +1,77 @@
+# Local development stack. Ports bind to 127.0.0.1 only; do not expose Postgres/Redis publicly.
+name: campnet
+
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-campnet}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-campnet}
+    volumes:
+      - pgdata:/var/lib/postgresql
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:8
+    ports:
+      - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build: ./backend
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-campnet}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-campnet}
+      REDIS_URL: redis://redis:6379/0
+      LOCAL_MEDIA_ROOT: /var/lib/campnet/media
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    volumes:
+      - ./backend/app:/srv/backend/app
+      - ./backend/migrations:/srv/backend/migrations
+      - media:/var/lib/campnet/media
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      db: { condition: service_healthy }
+      redis: { condition: service_healthy }
+
+  worker:
+    build: ./backend
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-campnet}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-campnet}
+      REDIS_URL: redis://redis:6379/0
+      LOCAL_MEDIA_ROOT: /var/lib/campnet/media
+    command: ["python", "-m", "app.worker"]
+    volumes:
+      - ./backend/app:/srv/backend/app
+      - media:/var/lib/campnet/media
+    depends_on:
+      db: { condition: service_healthy }
+      redis: { condition: service_healthy }
+
+  frontend:
+    build: ./frontend
+    environment:
+      VITE_API_PROXY_TARGET: http://backend:8000
+    volumes:
+      - ./frontend/src:/srv/frontend/src
+    ports:
+      - "127.0.0.1:5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+  media:
