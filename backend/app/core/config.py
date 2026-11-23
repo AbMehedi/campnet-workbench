@@ -11,9 +11,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    app_env: Literal["development", "test", "production"] = "development"
+    # Default to the safest mode; local setups opt into development via .env (ADR 0003).
+    app_env: Literal["development", "test", "production"] = "production"
     app_secret_key: SecretStr = SecretStr("change-me")
-    log_level: str = "INFO"
+    log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
 
     database_url: str = "postgresql+psycopg://campnet:campnet@localhost:5432/campnet"
     redis_url: str = "redis://localhost:6379/0"

@@ -18,7 +18,8 @@ decision; the software preserves evidence and provenance.
    place; corrections create new revisions or events.
 5. **Server is the authority** for permissions and workflow state; the frontend never decides.
 6. **Don't leak internals** in API errors, health checks or logs: no stack traces, SQL, storage
-   keys, paths, credentials, or post text.
+   keys, paths, credentials, or post text. Sole exception: tracebacks in logs when
+   `APP_ENV=development` (ADR 0003) — never run development mode on real data.
 7. **Small steps.** One feature slice per branch/PR, with tests. Don't scaffold modules ahead of
    need.
 
